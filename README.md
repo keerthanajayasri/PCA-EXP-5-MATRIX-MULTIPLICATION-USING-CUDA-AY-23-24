@@ -1,8 +1,9 @@
-# PCA-EXP-5-MATRIX-MULTIPLICATION-USING-CUDA-AY-23-24
-<h3>ENTER YOUR NAME :KEERTHANA JAYASRI SK </h3>
+# PCA-EXP-5-MATRIX-MULTIPLICATION-USING-CUDA
+
+<h3>ENTER YOUR NAME : KEERTHANA JAYASRI SK</h3>
 <h3>ENTER YOUR REGISTER NO : 212222110019</h3>
 <h3>EX. NO : 5</h3>
-<h3>DATE: 28/10/2025</h3>
+<h3>DATE : 28/10/2025</h3>
 <h1> <align=center> MATRIX MULTIPLICATION USING CUDA </h3>
   Implement Matrix Multiplication using GPU.</h3>
 
@@ -26,12 +27,10 @@ Google Colab with NVCC Compiler
 12.	Print Result: Print the result matrix and the elapsed time.
 13.	Free Device Memory: Finally, free the device memory that was allocated for the matrices.
 ## PROGRAM:
-```
+```python
 !pip install git+https://github.com/andreinechaev/nvcc4jupyter.git
 %load_ext nvcc4jupyter
-```
 
-```
 %%writefile matmul.cu
 #include <stdio.h>
 #include <cuda_runtime.h>
@@ -121,11 +120,14 @@ __global__ void matrixMultiply(int *a, int *b, int *c, int size)
     int col = blockIdx.x * blockDim.x + threadIdx.x;
 
     int sum = 0;
+    if (row < size && col < size)
+    {
     for (int k = 0; k < size; ++k)
     {
         sum += a[row * size + k] * b[k * size + col];
     }
     c[row * size + col] = sum;
+    }
 }
 int main()
 {
@@ -191,20 +193,15 @@ int main()
 
     return 0;
 }
-```
-```
-!nvcc -o matmul matmul.cu
-```
 
+!nvcc -arch=sm_75 matmul.cu -o matmul
+!nvprof ./matmul
+!nvprof --print-gpu-trace ./matmul
 ```
-!./matmul
-```
-
 
 ## OUTPUT:
-
-<img width="317" height="138" alt="image" src="https://github.com/user-attachments/assets/fcfe02a4-9d4f-47f1-b0e2-0e557ec00c16" />
-
+<img width="1174" height="545" alt="image" src="https://github.com/user-attachments/assets/dc563998-f2d7-4103-8c6d-1129415ae317" />
+<img width="1747" height="444" alt="image" src="https://github.com/user-attachments/assets/bae38a85-b2a9-445b-a95b-c683af3ac234" />
 
 ## RESULT:
-Thus the program has been executed by using CUDA to mulptiply two matrices. It is observed that there are variations in host and device elapsed time. Device took 0.000207 time and host took 0.000350 time.
+Thus the program has been executed by using CUDA to multiply two matrices. It is observed that there are variations in host and device elapsed time. Device took 3.7120 µs (0.000003712 s) and Host took 0.000185 s (0.185 ms).
